@@ -2,13 +2,12 @@ package socketio
 
 import (
 	"errors"
+	"github.com/googollee/go-socket.io/engineio/transport/websocket"
 	"net/url"
-	"path"
 	"strings"
 
 	"github.com/googollee/go-socket.io/engineio"
 	"github.com/googollee/go-socket.io/engineio/transport"
-	"github.com/googollee/go-socket.io/engineio/transport/polling"
 	"github.com/googollee/go-socket.io/logger"
 	"github.com/googollee/go-socket.io/parser"
 )
@@ -38,10 +37,10 @@ func NewClient(addr string, opts *engineio.Options) (*Client, error) {
 		return nil, err
 	}
 
-	namespace := fmtNS(u.Path)
+	namespace := "" //fmtNS(u.Path)
 
 	// Not allowing other than default
-	u.Path = path.Join("/socket.io", namespace)
+	//u.Path = path.Join("/socket.io", namespace)
 	u.Path = u.EscapedPath()
 	if strings.HasSuffix(u.Path, "socket.io") {
 		u.Path += "/"
@@ -65,7 +64,7 @@ func fmtNS(ns string) string {
 
 func (c *Client) Connect() error {
 	dialer := engineio.Dialer{
-		Transports: []transport.Transport{polling.Default},
+		Transports: []transport.Transport{websocket.Default},
 	}
 
 	enginioCon, err := dialer.Dial(c.url, nil)
