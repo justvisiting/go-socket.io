@@ -1,6 +1,6 @@
 module github.com/googollee/go-socket.io
 
-go 1.16
+go 1.21
 
 require (
 	github.com/gofrs/uuid v4.4.0+incompatible
