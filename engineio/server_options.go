@@ -20,6 +20,15 @@ type Options struct {
 
 	RequestChecker CheckerFunc
 	ConnInitor     ConnInitorFunc
+
+	Header http.Header
+}
+
+func (c *Options) getHeader() http.Header {
+	if c != nil && c.Header != nil {
+		return c.Header
+	}
+	return http.Header{}
 }
 
 func (c *Options) getRequestChecker() CheckerFunc {

@@ -1,8 +1,10 @@
 package socketio
 
 import (
+	"crypto/tls"
 	"errors"
 	"github.com/googollee/go-socket.io/engineio/transport/websocket"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -67,7 +69,23 @@ func (c *Client) Connect() error {
 		Transports: []transport.Transport{websocket.Default},
 	}
 
-	enginioCon, err := dialer.Dial(c.url, nil)
+	dialer.Transports[0].(*websocket.Transport).TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: true,
+	}
+
+	//d := websocket.DefaultDialer
+	//		d.HandshakeTimeout = s.connectTimeout
+	//		d.TLSClientConfig = &tls.Config{
+	//			InsecureSkipVerify: true,
+	//		}
+	//		conn, _, err := d.Dial(s.url.String(), s.requestHeader)
+
+	var header http.Header
+	if c.opts != nil {
+		header = c.opts.Header
+	}
+
+	enginioCon, err := dialer.Dial(c.url, header)
 	if err != nil {
 		return err
 	}
